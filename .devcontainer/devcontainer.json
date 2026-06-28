@@ -1,0 +1,36 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/javascript-node
+{
+	"name": "Node.js",
+
+	"image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+
+	"forwardPorts": [5500],
+
+	// VS Code customization
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode.live-server",     // Live Preview
+				"esbenp.prettier-vscode",    // Prettier
+				"dbaeumer.vscode-eslint"     // ESLint (optional but recommended)
+			],
+			"settings": {
+				// Enable Prettier as the default formatter
+				"editor.defaultFormatter": "esbenp.prettier-vscode",
+				// Format on save
+				"editor.formatOnSave": true,
+				// Optional: enforce Prettier for JS/TS/HTML
+				"[javascript]": {
+					"editor.defaultFormatter": "esbenp.prettier-vscode"
+				},
+				"[typescript]": {
+					"editor.defaultFormatter": "esbenp.prettier-vscode"
+				},
+				"[html]": {
+					"editor.defaultFormatter": "esbenp.prettier-vscode"
+				}
+			}
+		}
+	}
+}

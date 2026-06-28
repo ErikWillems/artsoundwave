@@ -1,0 +1,23 @@
+body {
+  font-family: "Open Sans", sans-serif;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+#soundwave {
+  width: min(1000px, 95vw);
+  height: 160px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.soundwave-bar {
+  width: 4px;
+  background: #111;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
