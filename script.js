@@ -70,20 +70,52 @@ function highlightNearestComment(position) {
 
 function createWave() {
   const width = wrapper.node().clientWidth;
-  const spacing = 10;
+  const spacing = 6;
   const bars = Math.floor(width / spacing);
 
   const pattern = d3.range(bars).map((_, i) => {
     const x = i / (bars - 1);
 
-    const envelope =
-      0.15 +
-      0.85 *
-        (Math.exp(-Math.pow((x - 0.25) / 0.06, 2)) +
-          Math.exp(-Math.pow((x - 0.38) / 0.08, 2)) +
-          Math.exp(-Math.pow((x - 0.54) / 0.07, 2)) +
-          Math.exp(-Math.pow((x - 0.82) / 0.08, 2)));
+    const peaks = [
+      // Intro
+      { position: 0.08, width: 0.035, strength: 0.7 },
 
+      // Section 1
+      { position: 0.18, width: 0.05, strength: 1.1 },
+      { position: 0.28, width: 0.04, strength: 0.8 },
+
+      // Pause
+      { position: 0.33, width: 0.025, strength: -0.8 },
+
+      // Section 2
+      { position: 0.38, width: 0.06, strength: 1.2 },
+      { position: 0.52, width: 0.045, strength: 1.0 },
+
+      // Longer pause
+      { position: 0.58, width: 0.03, strength: -1.2 },
+
+      // Section 3
+      { position: 0.64, width: 0.04, strength: 0.75 },
+      { position: 0.76, width: 0.055, strength: 1.2 },
+
+      // Small break before ending
+      { position: 0.84, width: 0.02, strength: -0.6 },
+
+      // Outro
+      { position: 0.9, width: 0.04, strength: 0.9 },
+    ];
+
+    const envelope = Math.max(
+      0.05,
+      0.12 +
+        peaks.reduce((sum, peak) => {
+          return (
+            sum +
+            peak.strength *
+              Math.exp(-Math.pow((x - peak.position) / peak.width, 2))
+          );
+        }, 0),
+    );
     const pulse = 0.65 + 0.35 * Math.sin(i * 1.35);
 
     return Math.min(110, 8 + envelope * pulse * 65);

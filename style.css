@@ -20,13 +20,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 6px;
+  gap: 3px;
 
   transform: translateY(-50%);
 }
 
 .soundwave-bar {
-  width: 4px;
+  width: 3px;
   background: #111;
   border-radius: 999px;
   flex-shrink: 0;
