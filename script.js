@@ -2,8 +2,8 @@ const commentsTop = [
   {
     position: 0,
     author: "Alice",
-    title: "Calm introduction",
-    text: "The opening feels relaxed and gives the listener some room before the first major peak.",
+    title: "Welcome",
+    text: "Welcome to this collaborative sound review. Move your cursor or finger across the waveform to explore comments from the team at specific moments in the recording. Each marker highlights a discussion point, suggestion, or observation related to that part of the audio.",
   },
   {
     position: 0.33,
@@ -100,20 +100,43 @@ function createWave() {
   renderComments(commentsBottom, "bottom");
 }
 
-wrapper
-  .on("mousemove", (event) => {
-    const bounds = wrapper.node().getBoundingClientRect();
-    const x = event.clientX - bounds.left;
-    const position = Math.max(0, Math.min(1, x / bounds.width));
+function updateCursor(event) {
+  const bounds = wrapper.node().getBoundingClientRect();
+  const x = event.clientX - bounds.left;
+  const position = Math.max(0, Math.min(1, x / bounds.width));
 
-    cursor.style("left", `${position * 100}%`);
-    highlightNearestComment(position);
+  cursor.style("left", `${position * 100}%`);
+  highlightNearestComment(position);
+}
+
+wrapper
+  .on("pointerdown", (event) => {
+    wrapper.node().setPointerCapture(event.pointerId);
+    updateCursor(event);
   })
-  .on("mouseleave", (event) => {
+  .on("pointermove", (event) => {
+    if (event.pointerType === "touch" && event.pressure === 0) return;
+    updateCursor(event);
+  })
+  .on("pointerup", (event) => {
+    wrapper.node().releasePointerCapture(event.pointerId);
+    if (event.pointerType === "touch") {
+      cursor.interrupt().transition().style("left", "0%");
+      highlightNearestComment(0);
+    }
+  })
+  .on("pointercancel", (event) => {
+    wrapper.node().releasePointerCapture(event.pointerId);
+    if (event.pointerType === "touch") {
+      cursor.interrupt().transition().style("left", "0%");
+      highlightNearestComment(0);
+    }
+  })
+  .on("mouseleave", () => {
     cursor.interrupt().transition().style("left", "0%");
     highlightNearestComment(0);
   });
-
 createWave();
+highlightNearestComment(0);
 
 new ResizeObserver(createWave).observe(wrapper.node());
