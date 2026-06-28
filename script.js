@@ -1,15 +1,44 @@
 const commentsTop = [
-  { position: 0.14, author: "Alice" },
-  { position: 0.33, author: "Alice" },
-  { position: 0.56, author: "Alice" },
+  {
+    position: 0.14,
+    author: "Alice",
+    title: "Calm introduction",
+    text: "The opening feels relaxed and gives the listener some room before the first major peak.",
+  },
+  {
+    position: 0.33,
+    author: "Alice",
+    title: "Nice buildup",
+    text: "The energy increases naturally here and creates anticipation for the next section.",
+  },
+  {
+    position: 0.56,
+    author: "Alice",
+    title: "Peak could be stronger",
+    text: "This feels like the emotional high point of the track, but the contrast with the previous section could be bigger.",
+  },
 ];
 
 const commentsBottom = [
-  { position: 0.22, author: "Bob" },
-  { position: 0.48, author: "Bob" },
-  { position: 0.82, author: "Bob" },
+  {
+    position: 0.22,
+    author: "Bob",
+    title: "Shorten intro",
+    text: "The first section might be slightly too long. Consider getting to the main idea a little sooner.",
+  },
+  {
+    position: 0.48,
+    author: "Bob",
+    title: "Strong rhythm",
+    text: "This section has a really good flow and pacing. It keeps the listener engaged.",
+  },
+  {
+    position: 0.82,
+    author: "Bob",
+    title: "Satisfying ending",
+    text: "The ending feels complete and leaves enough time for the final idea to settle.",
+  },
 ];
-
 const comments = [
   ...commentsTop.map((d) => ({ ...d, side: "top" })),
   ...commentsBottom.map((d) => ({ ...d, side: "bottom" })),
@@ -17,6 +46,7 @@ const comments = [
 
 const wrapper = d3.select("#soundwave-wrapper");
 const cursor = d3.select("#soundwave-cursor");
+const popup = d3.select(".popup");
 
 function renderComments(comments, className) {
   wrapper
@@ -33,6 +63,9 @@ function highlightNearestComment(position) {
   wrapper
     .selectAll(".comment-dot")
     .classed("is-nearest", (d) => d.position === nearest.position);
+
+  popup.select("h2").text(nearest.title);
+  popup.select("p").text(nearest.text);
 }
 
 function createWave() {
@@ -78,10 +111,6 @@ wrapper
 
     cursor.style("left", `${position * 100}%`);
     highlightNearestComment(position);
-  })
-  .on("mouseleave", () => {
-    cursor.style("opacity", 0);
-    wrapper.selectAll(".comment-dot").classed("is-nearest", false);
   });
 
 createWave();
