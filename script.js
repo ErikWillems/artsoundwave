@@ -63,7 +63,7 @@ function highlightNearestComment(position) {
   wrapper
     .selectAll(".comment-dot")
     .classed("is-nearest", (d) => d.position === nearest.position);
-
+  popup.select("h3").text(nearest.author);
   popup.select("h2").text(nearest.title);
   popup.select("p").text(nearest.text);
 }
