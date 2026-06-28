@@ -1,6 +1,6 @@
 const commentsTop = [
   {
-    position: 0.14,
+    position: 0,
     author: "Alice",
     title: "Calm introduction",
     text: "The opening feels relaxed and gives the listener some room before the first major peak.",
@@ -101,9 +101,6 @@ function createWave() {
 }
 
 wrapper
-  .on("mouseenter", () => {
-    cursor.style("opacity", 1);
-  })
   .on("mousemove", (event) => {
     const bounds = wrapper.node().getBoundingClientRect();
     const x = event.clientX - bounds.left;
@@ -111,6 +108,10 @@ wrapper
 
     cursor.style("left", `${position * 100}%`);
     highlightNearestComment(position);
+  })
+  .on("mouseleave", (event) => {
+    cursor.interrupt().transition().style("left", "0%");
+    highlightNearestComment(0);
   });
 
 createWave();
