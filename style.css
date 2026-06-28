@@ -47,3 +47,31 @@ body {
 .comment-dot.bottom {
   bottom: 35px;
 }
+#soundwave-wrapper {
+  cursor: crosshair;
+}
+
+#soundwave-cursor {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: #111;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.comment-dot {
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.comment-dot.is-nearest {
+  background: #000;
+  transform: translateX(-50%) scale(1.7);
+}
