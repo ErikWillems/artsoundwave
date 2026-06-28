@@ -1,12 +1,27 @@
-const container = d3.select("#soundwave");
+const commentsTop = [
+  { position: 0.14, author: "Alice" },
+  { position: 0.33, author: "Alice" },
+  { position: 0.56, author: "Alice" },
+];
+
+const commentsBottom = [
+  { position: 0.22, author: "Bob" },
+  { position: 0.48, author: "Bob" },
+  { position: 0.82, author: "Bob" },
+];
+const wrapper = d3.select("#soundwave-wrapper");
+function renderComments(comments, className) {
+  wrapper
+    .selectAll(`.comment-dot.${className}`)
+    .data(comments)
+    .join("div")
+    .attr("class", `comment-dot ${className}`)
+    .style("left", (d) => `${d.position * 100}%`);
+}
 
 function createWave() {
-  const width = container.node().clientWidth;
-
-  // Approximate width per bar including gap
+  const width = wrapper.node().clientWidth;
   const spacing = 10;
-
-  // More screen width = more bars
   const bars = Math.floor(width / spacing);
 
   const pattern = d3.range(bars).map((_, i) => {
@@ -25,14 +40,17 @@ function createWave() {
     return Math.min(110, 8 + envelope * pulse * 65);
   });
 
-  container
+  d3.select("#soundwave")
     .selectAll(".soundwave-bar")
     .data(pattern)
     .join("div")
     .attr("class", "soundwave-bar")
     .style("height", (d) => `${d}px`);
+
+  renderComments(commentsTop, "top");
+  renderComments(commentsBottom, "bottom");
 }
 
 createWave();
 
-window.addEventListener("resize", createWave);
+new ResizeObserver(createWave).observe(wrapper.node());

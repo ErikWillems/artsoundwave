@@ -4,15 +4,24 @@ body {
   display: grid;
   place-items: center;
 }
+#soundwave-wrapper {
+  position: relative;
+  width: min(1000px, 95vw);
+  height: 260px;
+}
 
 #soundwave {
-  width: min(1000px, 95vw);
-  height: 160px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
 
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 6px;
+
+  transform: translateY(-50%);
 }
 
 .soundwave-bar {
@@ -20,4 +29,21 @@ body {
   background: #111;
   border-radius: 999px;
   flex-shrink: 0;
+}
+
+.comment-dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #444;
+  transform: translateX(-50%);
+}
+
+.comment-dot.top {
+  top: 35px;
+}
+
+.comment-dot.bottom {
+  bottom: 35px;
 }
