@@ -153,8 +153,8 @@ wrapper
   .on("pointerup", (event) => {
     wrapper.node().releasePointerCapture(event.pointerId);
     if (event.pointerType === "touch") {
-      cursor.interrupt().transition().style("left", "0%");
-      highlightNearestComment(0);
+      //cursor.interrupt().transition().style("left", "0%");
+      //highlightNearestComment(0);
     }
   })
   .on("pointercancel", (event) => {
