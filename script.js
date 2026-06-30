@@ -1,7 +1,7 @@
 const commentsTop = [
   {
     position: 0,
-    author: "Alice",
+    author: "Dana",
     title: "Welcome",
     text: "Welcome to this collaborative sound review. Move your cursor or finger across the waveform to explore comments from the team at specific moments in the recording. Each marker highlights a discussion point, suggestion, or observation related to that part of the audio.",
   },
