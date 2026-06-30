@@ -1,7 +1,8 @@
 body {
   font-family: "Open Sans", sans-serif;
   min-height: 100vh;
-  place-items: center;
+  display: grid;
+  justify-items: center;
 }
 #soundwave-wrapper {
   position: relative;
@@ -23,6 +24,12 @@ body {
   gap: 3px;
 
   transform: translateY(-50%);
+
+  touch-action: none;
+  user-select: none;
+
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .soundwave-bar {
