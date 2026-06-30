@@ -140,33 +140,27 @@ function updateCursor(event) {
   cursor.style("left", `${position * 100}%`);
   highlightNearestComment(position);
 }
+let isDragging = false;
 
 wrapper
   .on("pointerdown", (event) => {
+    isDragging = true;
     wrapper.node().setPointerCapture(event.pointerId);
     updateCursor(event);
   })
   .on("pointermove", (event) => {
-    if (event.pointerType === "touch" && event.pressure === 0) return;
+    if (!isDragging && event.pointerType === "touch") return;
+
+    event.preventDefault();
     updateCursor(event);
   })
   .on("pointerup", (event) => {
+    isDragging = false;
     wrapper.node().releasePointerCapture(event.pointerId);
-    if (event.pointerType === "touch") {
-      //cursor.interrupt().transition().style("left", "0%");
-      //highlightNearestComment(0);
-    }
   })
   .on("pointercancel", (event) => {
+    isDragging = false;
     wrapper.node().releasePointerCapture(event.pointerId);
-    if (event.pointerType === "touch") {
-      //cursor.interrupt().transition().style("left", "0%");
-      //highlightNearestComment(0);
-    }
-  })
-  .on("mouseleave", () => {
-    //cursor.interrupt().transition().style("left", "0%");
-    //highlightNearestComment(0);
   });
 createWave();
 highlightNearestComment(0);
