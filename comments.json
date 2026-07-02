@@ -1,0 +1,43 @@
+{
+  "top": [
+    {
+      "position": 0,
+      "topLabel": "Dana",
+      "title": "Welcome",
+      "text": "Welcome to this collaborative sound review. Move your cursor or finger across the waveform to explore comments from the team at specific moments in the recording. Each marker highlights a discussion point, suggestion, or observation related to that part of the audio.",
+      "image": "images/intro.png"
+    },
+    {
+      "position": 0.33,
+      "topLabel": "Alice",
+      "title": "Nice buildup",
+      "text": "The energy increases naturally here and creates anticipation for the next section."
+    },
+    {
+      "position": 0.56,
+      "topLabel": "Alice",
+      "title": "Peak could be stronger",
+      "text": "This feels like the emotional high point of the track, but the contrast with the previous section could be bigger."
+    }
+  ],
+  "bottom": [
+    {
+      "position": 0.22,
+      "topLabel": "Bob",
+      "title": "Shorten intro",
+      "text": "The first section might be slightly too long. Consider getting to the main idea a little sooner."
+    },
+    {
+      "position": 0.48,
+      "topLabel": "Bob",
+      "title": "Strong rhythm",
+      "text": "This section has a really good flow and pacing. It keeps the listener engaged."
+    },
+    {
+      "position": 0.82,
+      "topLabel": "Bob",
+      "title": "Satisfying ending",
+      "text": "The ending feels complete and leaves enough time for the final idea to settle."
+    }
+  ]
+}

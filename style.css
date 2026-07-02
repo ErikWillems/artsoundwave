@@ -81,6 +81,17 @@ body {
   z-index: 2;
 }
 
-#popup-wrapper {
-  width: min(1000px, 95vw);
+.popup h3 {
+  font-size: 1.2rem;
+}
+
+.popup h2 {
+  font-size: 1.3rem;
+}
+.popup-image {
+  display: none;
+  width: 100%;
+  height: auto;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
 }

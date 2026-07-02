@@ -1,50 +1,25 @@
-const commentsTop = [
-  {
-    position: 0,
-    author: "Dana",
-    title: "Welcome",
-    text: "Welcome to this collaborative sound review. Move your cursor or finger across the waveform to explore comments from the team at specific moments in the recording. Each marker highlights a discussion point, suggestion, or observation related to that part of the audio.",
-  },
-  {
-    position: 0.33,
-    author: "Alice",
-    title: "Nice buildup",
-    text: "The energy increases naturally here and creates anticipation for the next section.",
-  },
-  {
-    position: 0.56,
-    author: "Alice",
-    title: "Peak could be stronger",
-    text: "This feels like the emotional high point of the track, but the contrast with the previous section could be bigger.",
-  },
-];
+let commentsTop = [];
+let commentsBottom = [];
+let comments = [];
 
-const commentsBottom = [
-  {
-    position: 0.22,
-    author: "Bob",
-    title: "Shorten intro",
-    text: "The first section might be slightly too long. Consider getting to the main idea a little sooner.",
-  },
-  {
-    position: 0.48,
-    author: "Bob",
-    title: "Strong rhythm",
-    text: "This section has a really good flow and pacing. It keeps the listener engaged.",
-  },
-  {
-    position: 0.82,
-    author: "Bob",
-    title: "Satisfying ending",
-    text: "The ending feels complete and leaves enough time for the final idea to settle.",
-  },
-];
+async function loadComments() {
+  const response = await fetch("./comments.json");
+  const data = await response.json();
 
-const comments = [
-  ...commentsTop.map((d) => ({ ...d, side: "top" })),
-  ...commentsBottom.map((d) => ({ ...d, side: "bottom" })),
-];
+  commentsTop = data.top;
+  commentsBottom = data.bottom;
 
+  comments = [
+    ...commentsTop.map((d) => ({ ...d, side: "top" })),
+    ...commentsBottom.map((d) => ({ ...d, side: "bottom" })),
+  ];
+
+  createWave();
+  highlightNearestComment(0);
+  updatePassedBars(0);
+}
+
+loadComments();
 const wrapper = d3.select("#soundwave-wrapper");
 const cursor = d3.select("#soundwave-cursor");
 const popup = d3.select(".popup");
@@ -60,7 +35,6 @@ function renderComments(comments, className) {
     .attr("class", `comment-dot ${className}`)
     .style("left", (d) => `${d.position * 100}%`);
 }
-
 function highlightNearestComment(position) {
   const nearest = d3.least(comments, (d) => Math.abs(d.position - position));
 
@@ -68,9 +42,17 @@ function highlightNearestComment(position) {
     .selectAll(".comment-dot")
     .classed("is-nearest", (d) => d.position === nearest.position);
 
-  popup.select("h3").text(nearest.author);
-  popup.select("h2").text(nearest.title);
-  popup.select("p").text(nearest.text);
+  const image = popup.select(".popup-image");
+
+  if (nearest.image) {
+    image.attr("src", nearest.image).style("display", "block");
+  } else {
+    image.attr("src", "").style("display", "none");
+  }
+
+  popup.select("h3").text(nearest.top || "");
+  popup.select("h2").text(nearest.title || "");
+  popup.select("p").text(nearest.text || "");
 }
 
 function updatePassedBars(position) {
@@ -163,9 +145,5 @@ wrapper
     isDragging = false;
     wrapper.node().releasePointerCapture(event.pointerId);
   });
-
-createWave();
-highlightNearestComment(0);
-updatePassedBars(0);
 
 new ResizeObserver(createWave).observe(wrapper.node());
