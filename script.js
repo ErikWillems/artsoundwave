@@ -39,6 +39,7 @@ const commentsBottom = [
     text: "The ending feels complete and leaves enough time for the final idea to settle.",
   },
 ];
+
 const comments = [
   ...commentsTop.map((d) => ({ ...d, side: "top" })),
   ...commentsBottom.map((d) => ({ ...d, side: "bottom" })),
@@ -47,6 +48,9 @@ const comments = [
 const wrapper = d3.select("#soundwave-wrapper");
 const cursor = d3.select("#soundwave-cursor");
 const popup = d3.select(".popup");
+
+let isDragging = false;
+let currentPosition = 0;
 
 function renderComments(comments, className) {
   wrapper
@@ -59,13 +63,18 @@ function renderComments(comments, className) {
 
 function highlightNearestComment(position) {
   const nearest = d3.least(comments, (d) => Math.abs(d.position - position));
-  console.log(nearest);
+
   wrapper
     .selectAll(".comment-dot")
     .classed("is-nearest", (d) => d.position === nearest.position);
+
   popup.select("h3").text(nearest.author);
   popup.select("h2").text(nearest.title);
   popup.select("p").text(nearest.text);
+}
+
+function updatePassedBars(position) {
+  d3.selectAll(".soundwave-bar").classed("passed", (d) => d.x <= position);
 }
 
 function createWave() {
@@ -74,34 +83,19 @@ function createWave() {
   const bars = Math.floor(width / spacing);
 
   const pattern = d3.range(bars).map((_, i) => {
-    const x = i / (bars - 1);
+    const x = bars <= 1 ? 0 : i / (bars - 1);
 
     const peaks = [
-      // Intro
       { position: 0.08, width: 0.035, strength: 0.7 },
-
-      // Section 1
       { position: 0.18, width: 0.05, strength: 1.1 },
       { position: 0.28, width: 0.04, strength: 0.8 },
-
-      // Pause
       { position: 0.33, width: 0.025, strength: -0.8 },
-
-      // Section 2
       { position: 0.38, width: 0.06, strength: 1.2 },
       { position: 0.52, width: 0.045, strength: 1.0 },
-
-      // Longer pause
       { position: 0.58, width: 0.03, strength: -1.2 },
-
-      // Section 3
       { position: 0.64, width: 0.04, strength: 0.75 },
       { position: 0.76, width: 0.055, strength: 1.2 },
-
-      // Small break before ending
       { position: 0.84, width: 0.02, strength: -0.6 },
-
-      // Outro
       { position: 0.9, width: 0.04, strength: 0.9 },
     ];
 
@@ -116,9 +110,13 @@ function createWave() {
           );
         }, 0),
     );
+
     const pulse = 0.65 + 0.35 * Math.sin(i * 1.35);
 
-    return Math.min(110, 8 + envelope * pulse * 65);
+    return {
+      x,
+      height: Math.min(110, 8 + envelope * pulse * 65),
+    };
   });
 
   d3.select("#soundwave")
@@ -126,10 +124,11 @@ function createWave() {
     .data(pattern)
     .join("div")
     .attr("class", "soundwave-bar")
-    .style("height", (d) => `${d}px`);
+    .style("height", (d) => `${d.height}px`);
 
   renderComments(commentsTop, "top");
   renderComments(commentsBottom, "bottom");
+  updatePassedBars(currentPosition);
 }
 
 function updateCursor(event) {
@@ -137,10 +136,12 @@ function updateCursor(event) {
   const x = event.clientX - bounds.left;
   const position = Math.max(0, Math.min(1, x / bounds.width));
 
+  currentPosition = position;
+
   cursor.style("left", `${position * 100}%`);
+  updatePassedBars(position);
   highlightNearestComment(position);
 }
-let isDragging = false;
 
 wrapper
   .on("pointerdown", (event) => {
@@ -162,7 +163,9 @@ wrapper
     isDragging = false;
     wrapper.node().releasePointerCapture(event.pointerId);
   });
+
 createWave();
 highlightNearestComment(0);
+updatePassedBars(0);
 
 new ResizeObserver(createWave).observe(wrapper.node());
